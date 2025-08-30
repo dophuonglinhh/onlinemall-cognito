@@ -1,0 +1,13 @@
+extends layout 
+
+block content 
+  h1 #{user.name}
+  br
+  img(src=user.profile_image)
+  br
+  a(href="/users/" + user._id + "/update") Update information
+  br 
+  a(href="/cart") My cart 
+  br
+  i.fas.fa-sign-out-alt.sidenav-icon
+  a.link(href='/signout') Sign out

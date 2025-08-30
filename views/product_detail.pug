@@ -1,0 +1,74 @@
+extends layout 
+
+block content
+  .store-home-header
+    img(src=store.store_logo alt=store.store_name style="height: 200px;")
+    h1.font= store.store_name
+    p By #{store.business_name}
+  .index-container 
+    // Product Details Section
+    .d-flex.align-items-center.mb-3
+      .cornered-rectangle
+      h2.text-danger.mb-0 Product Details
+    .product-container
+      .product-image
+        h3 #{product.name}
+        img.my-3(src=product.image alt=product.name)
+      .product-details
+        h4 Description
+        p #{product.description}
+        h4.mt-3(style="color: #DB4444") $#{product.price}
+        .product-form  
+          form.cart-form(method="POST" action="/cart")
+            label(for="product_quantity") Quantity:
+            input(type="hidden", name="product" value=product.id)
+            input.form-input(name="product_quantity" value="1" type="number" min="1" max=product.quantity onkeydown="return false")
+            input(type="hidden", name="actionType" id="actionType")
+            .buy-buttons
+              if user
+                button(type="submit" onclick="document.getElementById('actionType').value='add'") Add to cart
+                button.ml-2(type="submit" onclick="document.getElementById('actionType').value='buy'") Buy Now
+              else
+                button(type="button" onclick='showLoginModal("You need to log in to add this item to cart.")') Add to cart 
+                button.ml-2(type="button" onclick='showLoginModal("You need to log in to continue purchasing items.")') Buy Now
+          // wishlist button
+          if user
+            if is_wishlisted
+              form.wishlist-form(action="/wishlist" method="POST")
+                input(type="hidden" name="product" value=product._id)
+                input(type="hidden" name="type" value="product")
+                button(type="submit" style="background-color: white; border: 1px solid #DB4444;") 
+                  i.fa-solid.fa-heart(style="color: #DB4444; font-size: 20px;")
+            else if !is_wishlisted
+              form.wishlist-form(action="/wishlist" method="POST")
+                input(type="hidden" name="product" value=product._id)
+                input(type="hidden" name="type" value="product")
+                button(type="submit" style="background-color: white; border: 1px solid #DB4444;")
+                  i.fa-regular.fa-heart(style="color: #DB4444; font-size: 20px;")
+          else
+            button(type="button" onclick='showLoginModal("You need to log in to add this item to your wishlist.")' style="background-color: white; border: 1px solid #DB4444;")
+              i.fa-regular.fa-heart(style="color: #DB4444; font-size: 20px;")
+
+            // Modal for Login Prompt
+            .modal#loginModal.fade(tabindex='-1', role='dialog', aria-labelledby='modalLabel', aria-hidden='true')
+              .modal-dialog.modal-dialog-centered(role='document', style='max-width: 500px;')
+                .modal-content
+                  .modal-header
+                    h2.modal-title(style='font-size: 1.5rem;') Login Required
+                    button.close(data-dismiss='modal') ×
+                  .modal-body.text-center
+                    p#modalMessage(style='font-size: 1rem;') You need to log in to continue.
+                    a(href='/signin') 
+                      button(type="button") Log in
+            script.
+              function showLoginModal(message) {
+                document.getElementById('modalMessage').innerText = message;
+                $('#loginModal').modal('show');
+              }
+            
+  .store-home-footer
+      img(src=store.store_logo alt=store.store_name style="height: 200px;")
+      h1.font= store.store_name
+      p By #{store.business_name}
+
+  

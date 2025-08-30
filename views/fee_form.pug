@@ -1,0 +1,237 @@
+extends layout
+
+block content
+  .container.mt-5.mb-5
+    .row.justify-content-center
+      .col-lg-8.col-md-10
+        // Header Section
+        .text-center
+          .d-inline-flex.align-items-center.justify-content-center.bg-primary.text-white.rounded-circle.mb-3(style='width: 80px; height: 80px;')
+            i.fas.fa-money-bill-wave.fa-2x
+          h2.h3.font-weight-bold.text-dark #{fee ? 'Edit Fee Details' : 'Create New Fee'}
+          p.text-muted.lead #{fee ? 'Update the fee information below' : 'Fill in the details to add a new fee to the system'}
+        
+        // Main Form Card
+        .box-container
+          // Error Alert
+          if error
+            .alert.alert-danger.border-0.shadow-sm(role='alert')
+              .d-flex.align-items-center
+                i.fas.fa-exclamation-triangle.fa-lg.mr-3
+                div
+                  h6.alert-heading.mb-1 Error
+                  p.mb-0 #{error}
+          
+          // Form
+          form(method='POST', action=fee ? `/fees/${fee._id}/edit` : '/fees/create-new', novalidate)
+            // Fee Name Field
+            .mb-4
+              .form-group.position-relative
+                label.form-label.font-weight-semibold.text-dark(for='name')
+                  i.fas.fa-tag.mr-2.text-primary
+                  | Fee Name
+                  span.text-danger *
+                .input-group
+                  .input-group-prepend
+                    span.input-group-text.bg-light.border-right-0
+                      i.fas.fa-file-signature.text-muted
+                  input#name.form-control.form-control-lg.border-left-0.pl-0(
+                    type='text' 
+                    name='name' 
+                    value=fee ? fee.name : '' 
+                    required 
+                    placeholder='E.g., Premium Membership'
+                    maxlength='50'
+                  )
+            
+            // Fee Type Field
+            .mb-4
+              .form-group.position-relative
+                label.form-label.font-weight-semibold.text-dark(for='type')
+                  i.fas.fa-users.mr-2.text-primary
+                  | Fee Type
+                  span.text-danger *
+                .input-group
+                  .input-group-prepend
+                    span.input-group-text.bg-light.border-right-0
+                      i.fas.fa-user-tag.text-muted
+                  select#type.form-control.form-control-lg.border-left-0.pl-0(name='type' required)
+                    option(value='') Select the target audience for this fee
+                    option(value='shopper' selected=fee && fee.type === 'shopper') 
+                      | 🛒 Shoppers
+                    option(value='storeOwner' selected=fee && fee.type === 'storeOwner') 
+                      | 🏪 Store Owners
+          
+            // Description Field
+            .mb-4
+              .form-group.position-relative
+                label.form-label.font-weight-semibold.text-dark(for='description')
+                  i.fas.fa-align-left.mr-2.text-primary
+                  | Description
+                  span.text-danger *
+                .input-group.position-relative
+                  .input-group-prepend
+                    span.input-group-text.bg-light.border-right-0.align-items-start.pt-3
+                      i.fas.fa-edit.text-muted
+                  textarea#description.form-control.form-control-lg.border-left-0.pl-0(
+                    name='description' 
+                    rows='4' 
+                    required 
+                    maxlength='200'
+                    placeholder='Enter a short description for this fee'
+                  )= fee ? fee.description : ''
+                  small.text-muted#descriptionCount 0/200
+          
+            // Amount Field
+            .mb-4
+              .form-group.position-relative
+                label.form-label.font-weight-semibold.text-dark(for='amount')
+                  i.fas.fa-dollar-sign.mr-2.text-primary
+                  | Fee Amount
+                  span.text-danger *
+                .input-group
+                  .input-group-prepend
+                    span.input-group-text.bg-light.border-right-0
+                      i.fas.fa-money-bill-wave.text-success
+                  input#amount.form-control.border-left-0.pl-0(
+                    type='text' 
+                    name='amount' 
+                    value=fee ? fee.amount : '' 
+                    required 
+                    placeholder='E.g., $20/year, 5% of sales, $50/month'
+                    maxlength='50'
+                  )
+                
+            // Action Buttons
+            .d-flex.justify-content-between.align-items-center
+              a.btn.btn-outline-secondary.btn-md.shadow-sm(href='/fees')
+                i.fas.fa-arrow-left.mr-2
+                | Cancel
+              button.btn.btn-primary.btn-md.shadow.text-white(type='submit')
+                i.fas.fa-save.mr-2
+                | #{fee ? 'Save Changes' : 'Create Fee'}
+                  
+
+  // Custom Styles
+  style.
+    .form-control:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    
+    /* Position the description counter inside the textarea */
+    .input-group.position-relative #descriptionCount {
+      position: absolute;
+      bottom: 8px;
+      right: 12px;
+      font-size: 0.85rem;
+      color: #6c757d;
+      pointer-events: none;
+    }
+    .input-group.position-relative #description {
+      padding-right: 3rem;
+      padding-bottom: 1.75rem;
+    }
+    
+    .input-group-text {
+      border: 1px solid #ced4da;
+    }
+    
+    .form-control-lg {
+      font-size: 1rem;
+      padding: 0.75rem 1rem;
+    }
+    
+    .card {
+      border-radius: 15px;
+    }
+    
+    .btn-lg {
+      padding: 0.75rem 2rem;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+    }
+    
+    .btn-outline-secondary:hover {
+      transform: translateY(-2px);
+    }
+    
+    .form-label {
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .alert {
+      border-radius: 10px;
+    }
+
+  // Form Validation and Character Counter Script
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      // Character counter for description
+      const descriptionTextarea = document.getElementById('description');
+      const descriptionCount = document.getElementById('descriptionCount');
+      
+      function updateDescriptionCount() {
+        const currentLength = descriptionTextarea.value.length;
+        descriptionCount.textContent = currentLength + '/200';
+        
+        if (currentLength > 450) {
+          descriptionCount.classList.add('text-warning');
+        } else if (currentLength > 480) {
+          descriptionCount.classList.remove('text-warning');
+          descriptionCount.classList.add('text-danger');
+        } else {
+          descriptionCount.classList.remove('text-warning', 'text-danger');
+        }
+      }
+      
+      descriptionTextarea.addEventListener('input', updateDescriptionCount);
+      updateDescriptionCount(); // Initialize counter
+      
+      // Form validation styling
+      const form = document.querySelector('form');
+      const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+      
+      inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+          if (this.value.trim() === '') {
+            this.classList.add('is-invalid');
+          } else {
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+          }
+        });
+      });
+      
+      // Form submission validation
+      form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        inputs.forEach(input => {
+          if (input.value.trim() === '') {
+            input.classList.add('is-invalid');
+            isValid = false;
+          } else {
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+          }
+        });
+        
+        if (!isValid) {
+          e.preventDefault();
+          // Scroll to first invalid field
+          const firstInvalid = form.querySelector('.is-invalid');
+          if (firstInvalid) {
+            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstInvalid.focus();
+          }
+        }
+      });
+    });

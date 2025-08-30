@@ -1,0 +1,25 @@
+extends layout 
+
+block content
+  .box-container
+    .header-section
+      h1.text-center Add Product
+      p.text-center.mb-3 Add new product items to your store
+    
+    form(method="POST" action="/stores/"+ store_id +"/products/create" enctype="multipart/form-data")
+      .form-group 
+        label.form-label(for="product_name") Product name:
+        input.form-input(name="product_name" type="text" required)
+      .form-group
+        label.form-label(for="product_price") Product price ($):
+        input.form-input(name="product_price" type="number" required)
+      .form-group
+        label.form-label(for="product_description") Product description:
+        textarea.form-input(name="product_description"  type="text" required) 
+      .form-group 
+        label.form-label(for="product_image") Product image:
+        input(name="product_image" type="file" required)
+      .d-flex.justify-content-between
+        a(href="/stores/" + store_id)
+          button.btn-secondary(type="button") Cancel
+        button(type="submit") Add product 

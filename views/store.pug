@@ -1,0 +1,96 @@
+extends layout 
+
+block content
+  .store-home-container 
+    .store-home-header
+      .d-flex.justify-content-end.w-100
+        if user 
+          if is_wishlisted
+            form(action="/wishlist" method="POST")
+              input(type="hidden" name="store" value=store._id)
+              input(type="hidden" name="type" value="store")
+              button(type="submit" style="background-color: white; border: 1px solid #DB4444; margin: 0;") 
+                i.fa-solid.fa-heart(style="color: #DB4444; font-size: 20px;")
+          else if !is_wishlisted
+            form(action="/wishlist" method="POST")
+              input(type="hidden" name="store" value=store._id)
+              input(type="hidden" name="type" value="store")
+              button(type="submit" style="background-color: white; border: 1px solid #DB4444; margin: 0;")
+                i.fa-regular.fa-heart(style="color: #DB4444; font-size: 20px;")
+        else 
+          button(type="button" onclick='showLoginModal()' style="background-color: white; border: 1px solid #DB4444; margin: 0;")
+            i.fa-regular.fa-heart(style="color: #DB4444; font-size: 20px;")
+          // Modal for Login Prompt
+          .modal#loginModal.fade(tabindex='-1', role='dialog', aria-labelledby='modalLabel', aria-hidden='true')
+            .modal-dialog.modal-dialog-centered(role='document', style='max-width: 500px;')
+              .modal-content
+                .modal-header
+                  h2.modal-title(style='font-size: 1.5rem;') Login Required
+                  button.close(data-dismiss='modal') ×
+                .modal-body.text-center
+                  p(style='font-size: 1rem;') You need to log in to add this store to your favorites.
+                  a(href='/signin') 
+                    button(type="button") Log in
+          script.
+            function showLoginModal() {
+              $('#loginModal').modal('show');
+            }
+      
+      
+      img(src=store.store_logo alt=store.store_name style="height: 200px;")
+      h1.font= store.store_name
+      p By #{store.business_name}
+      
+    .index-container 
+      .browse-header 
+        .d-flex.align-items-center.mb-3
+          .cornered-rectangle
+          h2.text-danger.mb-0 New Arrivals
+        form.search-bar(method="get" action="/stores/" + store._id)
+          input.form-input(type="text", name="search", placeholder="Search a product in this store")
+          button(type="submit")
+            i.fa.fa-search
+          if is_store_owner 
+            a(href='/stores/' + store._id + '/products/create')
+              button(type="button").ml-2
+                i.fa-solid.fa-plus.color-white
+      // New Products Section
+      h2.text-center.mb-3 New Products
+      if all_products
+        .row
+          each product in new_products
+            .col-lg-3.mb-3.col-md-6.col-sm-12
+              a.link(href=product.url)
+                .card
+                  img.card-img-top(src=product.image alt=product.name)
+              .card-body
+                a.link(href=product.url)
+                  h5.card-title= product.name
+                h5.card-text(style="color: #DB4444") $#{product.price}
+      hr
+      .d-flex.align-items-center.mb-3
+        .cornered-rectangle
+        h2.text-danger.mb-0 Our Products
+      // All Products Section
+      h2.text-center.mb-3 All Products
+      if all_products
+        .row
+          each product in all_products
+            .col-lg-3.mb-3.col-md-6.col-sm-12
+              a.link(href=product.url)
+                .card
+                  img.card-img-top(src=product.image alt=product.name)
+              .card-body
+                a.link(href=product.url)
+                  h5.card-title= product.name
+                h5.card-text(style="color: #DB4444") $#{product.price}
+      else 
+        i.fa-solid.fa-box-open.fa-5x.my-3
+        h3.text-center There is no product updated yet.
+
+    .store-home-footer
+      img(src=store.store_logo alt=store.store_name style="height: 200px;")
+      h1.font= store.store_name
+      p By #{store.business_name}
+
+    

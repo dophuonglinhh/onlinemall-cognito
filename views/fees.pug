@@ -1,0 +1,104 @@
+extends layout
+
+block content
+  h2.text-center.mt-3 Mall Fees 
+  p.text-center.mb-3 Here are the fees for using our mall services.
+  
+  if isAdmin
+    .text-center.mb-4
+      a.btn.btn-success(href='/fees/create-new') Add New Fee
+  
+  .fees-container
+    - var shopperFees = fees.filter(fee => fee.type === 'shopper')
+    - var ownerFees = fees.filter(fee => fee.type === 'storeOwner')
+    
+    .d-flex.align-items-center.mb-3
+      .cornered-rectangle
+      h2.text-danger.mb-0 for Shoppers
+    
+    table.fees-table
+      thead
+        tr
+          th.fee-type Fee Name
+          th Description
+          th.fee-amount Amount          
+          if isAdmin
+            th Actions
+      tbody
+        each fee in shopperFees
+          tr
+            td #{fee.name}
+            td #{fee.description}
+            td #{fee.amount}
+            if isAdmin
+              td
+                a.btn.btn-primary.btn-sm.mr-1(href=`/fees/${fee._id}/edit`) Edit
+                a.btn.btn-danger.btn-sm.text-white(type='button' onclick=`confirmDelete('${fee._id}', '${fee.name}')`) Delete
+
+    .d-flex.align-items-center.mb-3
+      .cornered-rectangle
+      h2.text-danger.mb-0 for Store Owners
+    
+    table.fees-table
+      thead
+        tr
+          th.fee-type Fee Name
+          th Description
+          th.fee-amount Amount
+          if isAdmin
+            th Actions
+      tbody
+        each fee in ownerFees
+          tr
+            td #{fee.name}
+            td #{fee.description}
+            td #{fee.amount}
+            if isAdmin
+              td 
+                a.btn.btn-primary.btn-sm.mr-1(href=`/fees/${fee._id}/edit`) Edit
+                a.btn.btn-danger.btn-sm.text-white(type='button' onclick=`confirmDelete('${fee._id}', '${fee.name}')`) Delete
+    hr
+  .container.my-5
+    .row.text-center
+      .col-md-4
+        .outer-circle
+          .inner-circle
+            i.fa.fa-truck.fa-2x.text-white
+        h5.index-service FREE AND FAST DELIVERY
+        p.index-service-p Free delivery for all orders over $140
+      .col-md-4
+        .outer-circle
+          .inner-circle
+            i.fa.fa-headphones.fa-2x.text-white
+        h5.index-service 24/7 CUSTOMER SERVICE
+        p.index-service-p Friendly 24/7 customer support
+      .col-md-4
+        .outer-circle
+          .inner-circle
+            i.fa.fa-shield.fa-2x.text-white
+        h5.index-service MONEY BACK GUARANTEE
+        p.index-service-p We return money within 30 days
+
+  // Delete confirmation modal and script
+  if isAdmin
+    .modal.fade#deleteConfirmModal(tabindex='-1' role='dialog')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5.modal-title Confirm Delete
+            button.close(type='button' data-dismiss='modal')
+              span ×
+          .modal-body
+            p Are you sure you want to delete this fee?
+            p.font-weight-bold#feeToDelete
+          .modal-footer
+            button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
+            form#deleteForm(method='POST' style='display: inline;')
+              button.btn.btn-danger(type='submit') Delete Fee
+
+    script.
+      function confirmDelete(feeId, feeName) {
+        document.getElementById('feeToDelete').textContent = feeName;
+        document.getElementById('deleteForm').action = '/fees/' + feeId + '/delete';
+        $('#deleteConfirmModal').modal('show');
+      }

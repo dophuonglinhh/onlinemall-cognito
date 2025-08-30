@@ -1,0 +1,44 @@
+extends layout 
+
+block content 
+  .browse-container
+    .browse-header
+      div.d-flex.align-items-center
+        .cornered-rectangle
+        h2.text-danger.mb-0 Browse Stores by Category
+      form.search-bar(method="get")
+        input.form-input(type="text", name="search", placeholder="Search a store")
+        button(type="submit")
+          i.fa.fa-search
+
+    each category in categories
+      h2= category._id
+      .row
+        each store in category.stores
+          .col-lg-3.mb-3.col-md-6.col-sm-12
+            a.link(href=`/stores/${store._id}`)
+              .card.shadow-box
+                img.card-img-top(src=store.store_logo alt=store.store_name)
+                .card-body
+                  p.card-text.text-center= store.store_name
+    hr
+  .container.my-5
+    .row.text-center
+      .col-md-4
+        .outer-circle
+          .inner-circle
+            i.fa.fa-truck.fa-2x.text-white
+        h5.index-service FREE AND FAST DELIVERY
+        p.index-service-p Free delivery for all orders over $140
+      .col-md-4
+        .outer-circle
+          .inner-circle
+            i.fa.fa-headphones.fa-2x.text-white
+        h5.index-service 24/7 CUSTOMER SERVICE
+        p.index-service-p Friendly 24/7 customer support
+      .col-md-4
+        .outer-circle
+          .inner-circle
+            i.fa.fa-shield.fa-2x.text-white
+        h5.index-service MONEY BACK GUARANTEE
+        p.index-service-p We return money within 30 days

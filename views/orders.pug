@@ -1,0 +1,38 @@
+extends layout
+
+block content
+  .browse-container
+    .browse-header
+      div.d-flex.align-items-center
+        .cornered-rectangle
+        h2.text-danger.mb-0 My Orders
+    if orders.length != 0
+      each order in orders
+        .container.my-4.cart-container
+          .order-header.d-flex.justify-content-between
+            h4 Order Date: #{order.date_added.toLocaleDateString()}
+            h4 Total: $#{order.sum}
+          table.table
+            thead.shadow-box
+              tr
+                th Product
+                th Price
+                th Quantity
+                th Subtotal
+            tbody
+              each item in order.items
+                tr
+                  td(data-label="Product")
+                    a.link(href=item.product.url)
+                      img.card-img-top(src=item.product.image alt=item.product.name style="width: 50px; height: 50px; object-fit: cover;")
+                      span.ml-2 #{item.product.name}
+                  td(data-label="Price") $#{item.product.price}
+                  td(data-label="Quantity") #{item.quantity}
+                  td(data-label="Subtotal") $#{item.product.price * item.quantity}
+    else 
+      .text-center.my-5
+        i.fa-solid.fa-receipt.fa-5x(style="color: #D4AE63")
+        h3.mt-3 Oops! Your order list is empty.
+        p You haven't placed any order in our mall yet.
+        a(href='/')
+          button Shop Now

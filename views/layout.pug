@@ -1,0 +1,129 @@
+doctype html
+html
+  head
+    title #{title}
+    link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css')
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css')
+    link(rel='stylesheet' href='/stylesheets/style.css')    
+    link(rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png")
+    link(rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png")
+    link(rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png")
+    link(rel="manifest" href="/site.webmanifest")
+
+  body
+    p.promo-banner Summer Sale For All Swim Suits And Free Express Delivery – OFF 50%! Shop Now!
+    header.header-nav
+      div.mobile-nav
+        i#menubar.fas.fa-bars
+      h1.font Exclusive
+      div.navbar.navbar-expand-lg
+        ul.navbar-nav
+          li.nav-item
+            i.fa-solid.fa-house.sidenav-icon
+            a.link(href='/' class=(title === 'Home' ? 'active' : '')) Home
+          li.nav-item.dropdown
+            i.fa-solid.fa-store.sidenav-icon
+            a.link.dropdown-toggle(href='/browse_name' class=(title === 'Browse' ? 'active' : ''), id='navbarDropdown', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Browse
+            .dropdown-menu(aria-labelledby='navbarDropdown')
+              a.dropdown-item(href='/browse_name') Browse Stores by Name
+              a.dropdown-item(href='/browse_category') Browse Stores by Category
+          li.nav-item
+            i.fa-solid.fa-info-circle.sidenav-icon
+            a.link(href='/about' class=(title === 'About' ? 'active' : '')) About 
+          //- li.nav-item
+          //-   i.fa-solid.fa-envelope.sidenav-icon
+          //-   a.link(href='/contact' class=(title === 'Contact' ? 'active' : '')) Contact 
+          li.nav-item
+            i.fa-solid.fa-question-circle.sidenav-icon
+            a.link(href='/faq' class=(title === 'FAQs' ? 'active' : '')) FAQs
+          li.nav-item
+            i.fa-solid.fa-credit-card.sidenav-icon
+            a.link(href='/fees' class=(title === 'Fees' ? 'active' : '')) Fees 
+          hr.sidenav-divider
+          li.nav-item
+            i.fa-solid.fa-user.sidenav-icon
+            if user
+              a.link(href='/account' class=(menu === 'Personal' ? 'active' : '')) My Account
+            else
+              a.link(href='/signin' class=(title === 'Sign in' ? 'active' : '')) My Account
+          if user && user.account_type === 'store owner'
+            li.nav-item.sidenav-icon
+              i.fa-solid.fa-user-tie.sidenav-icon
+              a.link(href='/account/business' class=((menu === 'Business')? 'active' : '')) My Business
+          li.nav-item.sidenav-icon.cart-nav-item
+            i.fas.fa-shopping-cart.sidenav-icon
+            if user
+              a.link.cart-link(href='/cart' class=(title === 'Cart' ? 'active' : ''))
+                span My Cart
+                if cartItemCount && cartItemCount > 0
+                  span.cart-badge #{cartItemCount}
+            else
+              a.link(href='/signin' class=(title === 'Sign in' ? 'active' : '')) My Cart 
+          li.nav-item.sidenav-icon
+            i.fas.fa-heart.sidenav-icon
+            if user
+              a.link(href='/wishlist' class=(title === 'Wishlist' ? 'active' : '')) My Wishlist 
+            else
+              a.link(href='/signin' class=(title === 'Sign in' ? 'active' : '')) My Wishlist 
+          li.nav-item.sidenav-icon
+            i.fas.fa-receipt.sidenav-icon
+            if user
+              a.link(href='/orders' class=(title === 'Order' ? 'active' : '')) My Orders 
+            else
+              a.link(href='/signin' class=(title === 'Sign in' ? 'active' : '')) My Orders 
+          hr.sidenav-divider
+          if user
+            li.nav-item.sidenav-icon.sign-out-nav
+              i.fas.fa-sign-out-alt.sidenav-icon
+              a.link(href='/logout') Sign out
+          div#sidenav-header
+            h1.font Exclusive
+            a#sidenav-close.link(href='#')
+              i.fa-solid.fa-circle-arrow-right
+      // Cart icon for desktop (visible when user is logged in)
+      if user
+        .navbar-cart.d-none.d-lg-flex
+          a.cart-icon-link(href='/cart')
+            i.fas.fa-shopping-cart.cart-icon
+            if cartItemCount && cartItemCount > 0
+              span.cart-count-badge #{cartItemCount}
+
+    
+    main    
+      block content
+
+    footer.footer
+      div.footer-columns
+        div.footer-logo 
+          h1.font Exclusive
+        div.footer-column
+          h5.footer-header Support
+          p RMIT University - SGS Campus, Vietnam
+          p exclusive@gmail.com
+          p +999-999-9999
+        div.account-quicklink-row
+          div.footer-column
+            h5.footer-header Account
+            if user
+              a.link(href='/account') My Account
+              a.link(href='/wishlist') Wishlist
+              a.link(href='/cart') Cart
+            else
+              a.link(href='/signin') My Account
+              a.link(href='/signin') Wishlist
+              a.link(href='/signin') Cart
+          div.footer-column
+            h5.footer-header Quick Link
+            a.link(href='/copyright') Copyright
+            a.link(href='/terms') Terms of Service 
+            a.link(href='/policy') Privacy Policy
+      hr.divider
+      .copyright| © Copyright 2024. All rights reserved.
+    
+    // Scripts at bottom for better performance
+    script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js')
+    script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js')
+    script(src='/script.js')
+    script(src='/javascripts/cart-update.js')  
